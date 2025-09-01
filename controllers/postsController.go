@@ -52,7 +52,31 @@ func RetrievePost(c *gin.Context) {
 
 	//return post
 	c.JSON(200, gin.H{
-		"posts": post,
+		"post": post,
+	})
+
+}
+
+func UpdatePost(c *gin.Context) {
+	//get id from url
+	id := c.Param("id")
+
+	//Get data of request body
+	var body struct {
+		Title string
+		Body  string
+	}
+	c.Bind(&body)
+
+	//get post in db
+	var post models.Post
+	initializers.DB.First(&post, id)
+
+	//update the post
+	initializers.DB.Model(&post).Updates(models.Post{Title: body.Title, Body: body.Body})
+	//return post
+	c.JSON(200, gin.H{
+		"post": post,
 	})
 
 }
