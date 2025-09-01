@@ -20,6 +20,7 @@ func main() {
 	router.GET("/posts", controllers.RetrievePosts)
 	router.GET("/posts/:id", controllers.RetrievePost)
 	router.PATCH("/posts/:id", controllers.UpdatePost)
+	router.DELETE("/posts/:id", controllers.DeletePost)
 	router.Run()
 
 }
