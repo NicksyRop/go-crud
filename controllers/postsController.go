@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"log"
+
 	"example.com/m/v2/initializers"
 	"example.com/m/v2/models"
 	"github.com/gin-gonic/gin"
@@ -31,6 +33,14 @@ func PostCreate(c *gin.Context) {
 }
 
 func RetrievePosts(c *gin.Context) {
+	//nb you can get the user fetching post
+
+	user, exists := c.Get("user")
+	//convert user to User model
+	if exists {
+		log.Printf("User with ID %d retrieving posts", user.(models.User).ID)
+	}
+
 	//get posts
 	var posts []models.Post
 	initializers.DB.Find(&posts)
