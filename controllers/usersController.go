@@ -4,6 +4,7 @@ import (
 	"os"
 	"time"
 
+	"example.com/m/v2/dtos"
 	"example.com/m/v2/initializers"
 	"example.com/m/v2/models"
 	"github.com/gin-gonic/gin"
@@ -11,13 +12,21 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// SignUp godoc
+// @Summary      Register a new user
+// @Description  Create a new user account with email and password
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        request  body dtos.SignUpRequest  true  "User signup request"
+// @Success      200      {object}  map[string]string
+// @Failure      400      {object}  map[string]string
+// @Router       /signup [post]
 func SignUp(c *gin.Context) {
 
 	//get email and password from req body
-	var body struct {
-		Email    string `json:"email" binding:"required"`
-		Password string `json:"password" binding:"required"`
-	}
+	var body dtos.SignUpRequest
+
 	err := c.BindJSON(&body)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
@@ -47,12 +56,20 @@ func SignUp(c *gin.Context) {
 
 }
 
+// Login godoc
+// @Summary      Login user
+// @Description  Authenticate user and return JWT token
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param       request  body dtos.SignUpRequest  true  "User login request"
+// @Success      200      {object}  map[string]string
+// @Failure      400      {object}  map[string]string
+// @Failure      404      {object}  map[string]string
+// @Router       /login [post]
 func Login(c *gin.Context) {
 	//get email and password from req
-	var body struct {
-		Email    string `json:"email" binding:"required"`
-		Password string `json:"password" binding:"required"`
-	}
+	var body dtos.SignUpRequest
 	err := c.BindJSON(&body)
 	if err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
