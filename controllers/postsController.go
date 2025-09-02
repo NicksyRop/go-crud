@@ -8,97 +8,120 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// PostCreate godoc
+// @Summary      Create a new post
+// @Description  Create a new blog post
+// @Tags         posts
+// @Accept       json
+// @Produce      json
+// @Param        post  body      models.Post  true  "Post to create"
+// @Success      200   {object}  models.Post
+// @Failure      400   {object}  map[string]string
+// @Router       /posts [post]
 func PostCreate(c *gin.Context) {
-	//get data from request body
 	var body struct {
 		Body  string
 		Title string
 	}
-
 	c.Bind(&body)
 
-	//create post
 	post := models.Post{Title: body.Title, Body: body.Body}
 	result := initializers.DB.Create(&post)
 
-	//check if we have error
 	if result.Error != nil {
 		c.Status(400)
 		return
 	}
-	//return post
+
 	c.JSON(200, gin.H{
 		"post": post,
 	})
 }
 
+// RetrievePosts godoc
+// @Summary      Get all posts
+// @Description  Retrieve all posts in the system
+// @Tags         posts
+// @Produce      json
+// @Success      200  {array}   models.Post
+// @Router       /posts [get]
 func RetrievePosts(c *gin.Context) {
-	//nb you can get the user fetching post
-
 	user, exists := c.Get("user")
-	//convert user to User model
 	if exists {
 		log.Printf("User with ID %d retrieving posts", user.(models.User).ID)
 	}
 
-	//get posts
 	var posts []models.Post
 	initializers.DB.Find(&posts)
 
-	//return posts
 	c.JSON(200, gin.H{
 		"posts": posts,
 	})
-
 }
 
+// RetrievePost godoc
+// @Summary      Get a post by ID
+// @Description  Retrieve a single post by its ID
+// @Tags         posts
+// @Produce      json
+// @Param        id   path      int  true  "Post ID"
+// @Success      200  {object}  models.Post
+// @Failure      404  {object}  map[string]string
+// @Router       /posts/{id} [get]
 func RetrievePost(c *gin.Context) {
-	//get id from url
 	id := c.Param("id")
 
-	//get post
 	var post models.Post
 	initializers.DB.First(&post, id)
 
-	//return post
 	c.JSON(200, gin.H{
 		"post": post,
 	})
-
 }
 
+// UpdatePost godoc
+// @Summary      Update a post
+// @Description  Update post details by ID
+// @Tags         posts
+// @Accept       json
+// @Produce      json
+// @Param        id    path      int         true  "Post ID"
+// @Param        post  body      models.Post true  "Updated post"
+// @Success      200   {object}  models.Post
+// @Failure      400   {object}  map[string]string
+// @Router       /posts/{id} [patch]
 func UpdatePost(c *gin.Context) {
-	//get id from url
 	id := c.Param("id")
 
-	//Get data of request body
 	var body struct {
 		Title string
 		Body  string
 	}
 	c.Bind(&body)
 
-	//get post in db
 	var post models.Post
 	initializers.DB.First(&post, id)
 
-	//update the post
 	initializers.DB.Model(&post).Updates(models.Post{Title: body.Title, Body: body.Body})
-	//return post
+
 	c.JSON(200, gin.H{
 		"post": post,
 	})
-
 }
 
+// DeletePost godoc
+// @Summary      Delete a post
+// @Description  Delete a post by ID
+// @Tags         posts
+// @Produce      json
+// @Param        id   path      int  true  "Post ID"
+// @Success      200  {string}  string  "ok"
+// @Router       /posts/{id} [delete]
 func DeletePost(c *gin.Context) {
-	//get id from url
 	id := c.Param("id")
 
-	//get post in db
 	var post models.Post
 	initializers.DB.Delete(&post, id)
 
 	c.Status(200)
-
 }
