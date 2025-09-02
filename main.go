@@ -11,10 +11,10 @@ import (
 func init() {
 	initializers.LoadEnvVariables()
 	initializers.ConnectDatabase()
+	initializers.MigrateDatabase()
 }
 
 func main() {
-
 	router := gin.Default()
 	router.POST("/posts", controllers.PostCreate)
 	router.GET("/posts", controllers.RetrievePosts)
