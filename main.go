@@ -21,6 +21,8 @@ func main() {
 	router.GET("/posts/:id", controllers.RetrievePost)
 	router.PATCH("/posts/:id", controllers.UpdatePost)
 	router.DELETE("/posts/:id", controllers.DeletePost)
+	router.POST("/signup", controllers.SignUp)
+	router.POST("/login", controllers.Login)
 	router.Run()
 
 }

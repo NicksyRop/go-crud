@@ -17,8 +17,8 @@ func PostCreate(c *gin.Context) {
 
 	//create post
 	post := models.Post{Title: body.Title, Body: body.Body}
-
 	result := initializers.DB.Create(&post)
+
 	//check if we have error
 	if result.Error != nil {
 		c.Status(400)
